@@ -1,4 +1,4 @@
-FROM --platform=linux/arm jc21/nginx-proxy-manager:2
+FROM --platform=linux/arm jc21/nginx-proxy-manager:2.2.4
 
-# Copy initial configuratio file
+# Copy initial configuration file
 COPY nginx-config.json /app/config/production.json

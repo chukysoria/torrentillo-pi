@@ -83,6 +83,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-DB
+        ports:
+            - '3306:3306'
         environment:
             MYSQL_ROOT_PASSWORD: 'npm'
             MYSQL_DATABASE: 'npm'
