@@ -1,0 +1,16 @@
+# https://hub.docker.com/r/linuxserver/sonarr
+FROM linuxserver/sonarr:arm32v7-preview
+
+RUN \
+ echo "**** install packages ****" && \
+ apt-get update && \
+ apt-get install -y \
+        nfs-common && \
+ echo "**** cleanup ****" && \
+ apt-get clean && \
+ rm -rf \
+	/tmp/* \
+	/var/tmp/*
+
+# add local files
+COPY root/ /

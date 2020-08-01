@@ -1,0 +1,92 @@
+version: '2.1'
+
+volumes:
+    adguardhome_work:
+    adguardhome_conf:
+    sonarr_conf:
+    radarr_conf:
+    bazarr_conf:
+    homeassistant_conf:
+    db_data:
+    nginx_conf:
+    nginx_data:
+    certificates:
+
+services:
+
+    # https://hub.docker.com/r/adguard/adguardhome
+    adguard:
+        image: adguard/adguardhome:armhf-latest
+        network_mode: host
+        privileged: true
+        volumes:
+            - 'adguardhome_work:/opt/adguardhome/work:rw'
+            - 'adguardhome_conf:/opt/adguardhome/conf:rw'
+    
+    sonarr:
+        build:
+            context: .
+            dockerfile: Dockerfile-sonarr
+        privileged: true
+        volumes:
+            - 'sonarr_conf:/config:rw'
+        ports:
+            - 8989:8989
+
+    radarr:
+        build: 
+            context: .
+            dockerfile: Dockerfile-radarr
+        privileged: true
+        volumes:
+            - 'radarr_conf:/config:rw'
+        ports:
+            - 7878:7878
+    
+    bazarr:
+        build: 
+            context: .
+            dockerfile: Dockerfile-bazarr
+        privileged: true
+        volumes:
+            - 'bazarr_conf:/config:rw'
+        ports:
+            - 6767:6767
+        depends_on: 
+            - sonarr
+            - bazarr
+
+    homeassistant:
+        image: homeassistant/raspberrypi2-homeassistant:latest
+        network_mode: host
+        volumes:
+            - 'homeassistant_conf:/config:rw'
+
+    nginx:
+        build:
+            context: .
+            dockerfile: Dockerfile-nginx
+        ports:
+            # Public HTTP Port:
+            - '80:80'
+            # Public HTTPS Port:
+            - '443:443'
+            # Admin Web Port:
+            - '81:81'
+        volumes:
+            - nginx_data:/data
+            - certificates:/etc/letsencrypt
+        depends_on:
+            - db
+
+    db:
+        build:
+            context: .
+            dockerfile: Dockerfile-DB
+        environment:
+            MYSQL_ROOT_PASSWORD: 'npm'
+            MYSQL_DATABASE: 'npm'
+            MYSQL_USER: 'npm'
+            MYSQL_PASSWORD: 'npm'
+        volumes:
+            - 'db_data:/var/lib/mysql'
