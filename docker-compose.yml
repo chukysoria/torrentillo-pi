@@ -7,10 +7,7 @@ volumes:
     radarr_conf:
     bazarr_conf:
     homeassistant_conf:
-    db_data:
-    nginx_conf:
-    nginx_data:
-    certificates:
+    swag_conf:
 
 services:
 
@@ -30,8 +27,10 @@ services:
         privileged: true
         volumes:
             - 'sonarr_conf:/config:rw'
-        ports:
-            - 8989:8989
+        #ports:
+        #    - 8989:8989
+        networks: 
+            - web_net
 
     radarr:
         build: 
@@ -40,8 +39,10 @@ services:
         privileged: true
         volumes:
             - 'radarr_conf:/config:rw'
-        ports:
-            - 7878:7878
+        #ports:
+        #    - 7878:7878
+        networks: 
+            - web_net
     
     bazarr:
         build: 
@@ -50,11 +51,13 @@ services:
         privileged: true
         volumes:
             - 'bazarr_conf:/config:rw'
-        ports:
-            - 6767:6767
+        #ports:
+        #    - 6767:6767
         depends_on: 
             - sonarr
-            - bazarr
+            - radarr
+        networks: 
+            - web_net
 
     homeassistant:
         image: homeassistant/raspberrypi2-homeassistant:latest
@@ -62,33 +65,21 @@ services:
         volumes:
             - 'homeassistant_conf:/config:rw'
 
-    nginx:
-        build:
-            context: .
-            dockerfile: Dockerfile-nginx
-        ports:
-            # Public HTTP Port:
-            - '80:80'
-            # Public HTTPS Port:
-            - '443:443'
-            # Admin Web Port:
-            - '81:81'
+    swag:
+        image: linuxserver/swag:arm32v7-latest
+        cap_add:
+            - NET_ADMIN
         volumes:
-            - nginx_data:/data
-            - certificates:/etc/letsencrypt
-        depends_on:
-            - db
+            - swag_conf:/config
+        ports:
+            - 443:443
+            - 80:80 #optional
+        networks: 
+            - web_net
 
-    db:
-        build:
-            context: .
-            dockerfile: Dockerfile-DB
-        ports:
-            - '3306:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: 'npm'
-            MYSQL_DATABASE: 'npm'
-            MYSQL_USER: 'npm'
-            MYSQL_PASSWORD: 'npm'
-        volumes:
-            - 'db_data:/var/lib/mysql'
+    duckdns:
+        image: linuxserver/duckdns:arm32v7-latest
+
+networks: 
+    web_net:
+        driver: bridge

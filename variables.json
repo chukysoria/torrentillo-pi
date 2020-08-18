@@ -1,0 +1,32 @@
+[
+    {
+        "name": "NFSPATH",
+        "value": "192.168.1.4:/volume1",
+        "serviceName": "*"
+    },
+    {
+        "name": "PGID",
+        "value": "100",
+        "serviceName": "*"
+    },
+    {
+        "name": "PUID",
+        "value": "1027",
+        "serviceName": "*"
+    },
+    {
+        "name": "URL",
+        "value": "boulebar.duckdns.org",
+        "serviceName": "swag"
+    },
+    {
+        "name": "VALIDATION",
+        "value": "duckdns",
+        "serviceName": "swag"
+    },
+    {
+        "name": "DUCKDNSTOKEN",
+        "value": "",
+        "serviceName": "swag"
+    }
+]

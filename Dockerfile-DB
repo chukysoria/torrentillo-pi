@@ -1,4 +1,0 @@
-FROM --platform=linux/arm yobasystems/alpine-mariadb:latest
-
-COPY db-00_aria.cnf ./00_aria.cnf
-RUN cat /00_aria.cnf >> /etc/mysql/my.cnf
