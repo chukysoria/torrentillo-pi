@@ -8,12 +8,15 @@ volumes:
     bazarr_conf:
     homeassistant_conf:
     swag_conf:
+    jackett_conf:
 
 services:
 
     # https://hub.docker.com/r/adguard/adguardhome
     adguard:
-        image: adguard/adguardhome:armhf-latest
+        build:
+            context: .
+            dockerfile: Dockerfile-adguard
         network_mode: host
         privileged: true
         volumes:
@@ -79,6 +82,17 @@ services:
 
     duckdns:
         image: linuxserver/duckdns:arm32v7-latest
+
+    jackett:
+        image: linuxserver/jackett:arm32v7-latest
+        environment:
+            - AUTO_UPDATE=true
+        volumes:
+            - 'jackett_conf:/config:rw'
+        # ports:
+        #     - 9117:9117
+        networks: 
+            - web_net
 
 networks: 
     web_net:

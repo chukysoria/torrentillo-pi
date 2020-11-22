@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/linuxserver/radarr
-FROM linuxserver/radarr:arm32v7-latest
+FROM --platform=linux/arm linuxserver/radarr:latest
 
 RUN \
  echo "**** install packages ****" && \

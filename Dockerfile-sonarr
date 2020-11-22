@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/linuxserver/sonarr
-FROM linuxserver/sonarr:arm32v7-preview
+FROM --platform=linux/arm linuxserver/sonarr:preview
 
 RUN \
  echo "**** install packages ****" && \
