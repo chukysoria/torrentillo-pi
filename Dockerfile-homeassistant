@@ -1,0 +1,4 @@
+# https://hub.docker.com/r/homeassistant/home-assistant
+FROM --platform=linux/arm/v7 homeassistant/home-assistant:latest
+
+LABEL PERSON="Carlos"

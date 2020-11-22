@@ -9,10 +9,10 @@ volumes:
     homeassistant_conf:
     swag_conf:
     jackett_conf:
+    nodered_conf:
 
 services:
 
-    # https://hub.docker.com/r/adguard/adguardhome
     adguard:
         build:
             context: .
@@ -63,7 +63,9 @@ services:
             - web_net
 
     homeassistant:
-        image: homeassistant/raspberrypi2-homeassistant:latest
+        build:
+            context: .
+            dockerfile: Dockerfile-homeassistant
         network_mode: host
         volumes:
             - 'homeassistant_conf:/config:rw'
@@ -93,6 +95,16 @@ services:
         #     - 9117:9117
         networks: 
             - web_net
+    
+    node-red:
+        build:
+            context: .
+            dockerfile: Dockerfile-nodered
+        # ports:
+        #    - 1880:1880
+        network_mode: host
+        volumes:
+            - nodered_conf:/data:rw
 
 networks: 
     web_net:
