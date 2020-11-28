@@ -31,8 +31,8 @@ services:
         privileged: true
         volumes:
             - 'sonarr_conf:/config:rw'
-        #ports:
-        #    - 8989:8989
+        ports:
+            - 8989:8989
         networks: 
             - web_net
 
@@ -89,7 +89,7 @@ services:
     jackett:
         image: linuxserver/jackett:arm32v7-latest
         environment:
-            - AUTO_UPDATE=true
+            - AUTO_UPDATE=false
         volumes:
             - 'jackett_conf:/config:rw'
         # ports:
