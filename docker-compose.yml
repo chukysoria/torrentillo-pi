@@ -6,7 +6,6 @@ volumes:
     sonarr_conf:
     radarr_conf:
     bazarr_conf:
-    homeassistant_conf:
     swag_conf:
     jackett_conf:
     nodered_conf:
@@ -62,14 +61,6 @@ services:
         networks: 
             - web_net
 
-    homeassistant:
-        build:
-            context: .
-            dockerfile: Dockerfile-homeassistant
-        network_mode: host
-        volumes:
-            - 'homeassistant_conf:/config:rw'
-
     swag:
         image: linuxserver/swag:arm32v7-latest
         cap_add:
@@ -105,15 +96,7 @@ services:
         network_mode: host
         volumes:
             - nodered_conf:/data:rw
-
-    node-red:
-        build:
-            context: .
-            dockerfile: Dockerfile-nodered
-        network_mode: host
-        volumes:
-        - 'nodered_conf:/data:rw'
         
-networks: 
+networks:
     web_net:
         driver: bridge
