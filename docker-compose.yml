@@ -9,6 +9,7 @@ volumes:
     swag_conf:
     jackett_conf:
     nodered_conf:
+    certs:
 
 services:
 
@@ -26,31 +27,46 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-sonarr
-        privileged: true
+        #privileged: true
+        cap_add:
+            - SYS_ADMIN
         volumes:
             - 'sonarr_conf:/config:rw'
-        ports:
-            - 8989:8989
+        #ports:
+        #    - 8989:8989
         networks: 
             - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
+            - "traefik.http.routers.sonarr.entrypoints=websecure"
+            
 
     radarr:
         build: 
             context: .
             dockerfile: Dockerfile-radarr
-        privileged: true
+        #privileged: true
+        cap_add:
+            - SYS_ADMIN
         volumes:
             - 'radarr_conf:/config:rw'
         #ports:
         #    - 7878:7878
         networks: 
             - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
+            - "traefik.http.routers.radarr.entrypoints=websecure"
     
     bazarr:
         build: 
             context: .
             dockerfile: Dockerfile-bazarr
-        privileged: true
+        #privileged: true
+        cap_add:
+            - SYS_ADMIN
         volumes:
             - 'bazarr_conf:/config:rw'
         #ports:
@@ -60,18 +76,10 @@ services:
             - radarr
         networks: 
             - web_net
-
-    swag:
-        image: linuxserver/swag:arm32v7-latest
-        cap_add:
-            - NET_ADMIN
-        volumes:
-            - swag_conf:/config
-        ports:
-            - 443:443
-            - 80:80 #optional
-        networks: 
-            - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
+            - "traefik.http.routers.bazarr.entrypoints=websecure"
 
     duckdns:
         image: linuxserver/duckdns:arm32v7-latest
@@ -86,6 +94,10 @@ services:
         #     - 9117:9117
         networks: 
             - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
+            - "traefik.http.routers.jackett.entrypoints=websecure"
     
     node-red:
         build:
@@ -93,10 +105,54 @@ services:
             dockerfile: Dockerfile-nodered
         # ports:
         #    - 1880:1880
-        network_mode: host
+        # network_mode: host
         volumes:
             - nodered_conf:/data:rw
-        
+        networks:
+            - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.node-red.rule=Host(`nodered.boulebar.duckdns.org`)"
+            - "traefik.http.routers.node-red.entrypoints=websecure"
+            - "traefik.http.routers.node-red.middlewares=ip-allowlist@docker"
+
+    traefik:
+        build:
+            context: .
+            dockerfile: Dockerfile-traefik
+        ports:
+            - 80:80/tcp
+            - 443:443/tcp
+            - 8080:8080/tcp
+        command: 
+            # Enable API
+            # - "--log.level=DEBUG"
+            - "--api.insecure=true"
+            # Use Docker Provider
+            - "--providers.docker=true"
+            - "--providers.docker.endpoint=unix:///var/run/balena.sock"
+            - "--providers.docker.exposedbydefault=false"
+            # Default 80 and 443, redirect to 443
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+            - "--entrypoints.websecure.address=:443"
+            # Use Duckdns DNS ACME challenge for HTTPs Certificates
+            - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
+            - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=duckdns"
+            #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            - "--certificatesresolvers.letsencrypt.acme.email=chukysoria@gmail.com"
+            - "--certificatesresolvers.letsencrypt.acme.storage=/var/certs/acme.json"
+        networks: 
+            - web_net
+        volumes:
+            - "certs:/var/certs"
+        labels:
+            - "traefik.enable=true"
+            # Restricted IPs
+            - "traefik.http.middlewares.ip-allowlist.ipWhiteList.sourcerange=192.168.1.0/24"
+            - "io.balena.features.balena-socket=true"
+
+   
 networks:
     web_net:
         driver: bridge
