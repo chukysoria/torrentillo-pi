@@ -22,7 +22,13 @@ services:
         volumes:
             - 'adguardhome_work:/opt/adguardhome/work:rw'
             - 'adguardhome_conf:/opt/adguardhome/conf:rw'
-    
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.adguard.rule=Host(`nodered.boulebar.duckdns.org`)"
+            - "traefik.http.routers.adguard.entrypoints=websecure"
+            - "traefik.http.routers.adguard.middlewares=ip-allowlist@docker"
+            - "traefik.http.services.adguard.loadbalancer.server.port=3000"
+
     sonarr:
         build:
             context: .
@@ -108,14 +114,13 @@ services:
         # network_mode: host
         volumes:
             - nodered_conf:/data:rw
-        networks:
-            - web_net
+        network_mode: host
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.node-red.rule=Host(`nodered.boulebar.duckdns.org`)"
             - "traefik.http.routers.node-red.entrypoints=websecure"
             - "traefik.http.routers.node-red.middlewares=ip-allowlist@docker"
-
+            - "traefik.http.services.node-red.loadbalancer.server.port=1880"
     traefik:
         build:
             context: .
@@ -146,8 +151,10 @@ services:
             - web_net
         volumes:
             - "certs:/var/certs"
+            #- /var/run/docker.sock:/var/run/docker.sock
         labels:
             - "traefik.enable=true"
+            - "traefik.http.routers.traefik.entrypoints=web"
             # Restricted IPs
             - "traefik.http.middlewares.ip-allowlist.ipWhiteList.sourcerange=192.168.1.0/24"
             - "io.balena.features.balena-socket=true"
