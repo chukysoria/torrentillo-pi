@@ -11,6 +11,7 @@ volumes:
     nodered_conf:
     certs:
     traefik_conf:
+    zerotier_config:
 
 services:
 
@@ -101,7 +102,6 @@ services:
             dockerfile: Dockerfile-nodered
         # ports:
         #    - 1880:1880
-        # network_mode: host
         volumes:
             - nodered_conf:/data:rw
         network_mode: host
@@ -123,6 +123,16 @@ services:
         labels:
             - "io.balena.features.balena-socket=true"
 
+    zerotier-one:
+        image: bltavares/zerotier
+        volumes: 
+            - zerotier_config:/var/lib/zerotier-one:rw
+        cap_add: 
+            - SYS_ADMIN
+            - NET_ADMIN
+        network_mode: host
+        devices: 
+            - /dev/net/tun 
    
 networks:
     web_net:
