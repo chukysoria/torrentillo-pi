@@ -24,7 +24,9 @@ services:
         volumes:
             - 'adguardhome_work:/opt/adguardhome/work:rw'
             - 'adguardhome_conf:/opt/adguardhome/conf:rw'
-
+        labels: 
+            io.balena.update.strategy: hand-over
+    
     sonarr:
         build:
             context: .

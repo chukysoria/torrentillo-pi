@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+touch /data/resin-kill-me
