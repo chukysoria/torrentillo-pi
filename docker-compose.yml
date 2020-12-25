@@ -21,6 +21,11 @@ services:
             dockerfile: Dockerfile-adguard
         network_mode: host
         privileged: true
+        #cap_add: 
+        #    - SYS_ADMIN
+        #    - NET_ADMIN
+        #devices: 
+        #    - /dev/net/tun 
         volumes:
             - 'adguardhome_work:/opt/adguardhome/work:rw'
             - 'adguardhome_conf:/opt/adguardhome/conf:rw'
@@ -83,6 +88,7 @@ services:
 
     duckdns:
         image: linuxserver/duckdns:arm32v7-latest
+        
 
     jackett:
         image: linuxserver/jackett:arm32v7-latest

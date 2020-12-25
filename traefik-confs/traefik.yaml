@@ -27,7 +27,7 @@ entryPoints:
       middlewares:
       - hsts-header@file
       tls:
-        certResolver: letsencrypt-staging
+        certResolver: letsencrypt
         options: modern@file
 
 http:
