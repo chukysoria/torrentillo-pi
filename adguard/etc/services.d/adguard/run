@@ -2,8 +2,6 @@
 
 cd /opt/adguardhome || exit
 
-rm /data/resin-kill-me
-
 exec \
     /opt/adguardhome/AdGuardHome -h 0.0.0.0 \
     -c /opt/adguardhome/conf/AdGuardHome.yaml \
