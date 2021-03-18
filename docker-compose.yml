@@ -103,8 +103,9 @@ services:
             dockerfile: Dockerfile-nodered
         # ports:
         #    - 1880:1880
-        cap_add:
-            - NET_BIND_SERVICE
+        # cap_add:
+        #     - NET_BIND_SERVICE
+        privileged: true
         volumes:
             - nodered_conf:/data:rw
         network_mode: host
