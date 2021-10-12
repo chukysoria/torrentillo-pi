@@ -1,24 +1,4 @@
 # https://hub.docker.com/r/adguard/adguardhome
 FROM --platform=linux/arm/v7 adguard/adguardhome:latest
 
-# set version for s6 overlay
-ARG OVERLAY_VERSION="v2.2.0.3"
-ARG OVERLAY_ARCH="armhf"
-
-# add s6 overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}-installer /tmp/
-
-RUN \
- echo "**** create data folder ****" && \
- mkdir /data && \ 
- echo "**** install s6 overlay ****" && \
- chmod +x /tmp/s6-overlay-${OVERLAY_ARCH}-installer && \
- /tmp/s6-overlay-${OVERLAY_ARCH}-installer / && \
- echo "**** Cleaning ****" && \
- rm -rf \
-	/tmp/*
-
-# Add service
-COPY adguard/ /
-
-ENTRYPOINT ["/init"]
+LABEL PERSON="Carlos"
