@@ -81,10 +81,10 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: linuxserver/duckdns:arm32v7-latest
+        image: linuxserver/duckdns:arm64v8-latest
 
     jackett:
-        image: linuxserver/jackett:arm32v7-latest
+        image: linuxserver/jackett:arm64v8-latest
         environment:
             - AUTO_UPDATE=false
         volumes:

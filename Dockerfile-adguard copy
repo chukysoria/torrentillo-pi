@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/adguard/adguardhome
-FROM --platform=linux/arm/v7 adguard/adguardhome:latest
+FROM --platform=linux/arm64 adguard/adguardhome:latest
 
 # set version for s6 overlay
 ARG OVERLAY_VERSION="v2.2.0.3"

@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/nodered/node-red
-FROM --platform=linux/arm/v7 nodered/node-red:latest
+FROM --platform=linux/arm64 nodered/node-red:latest
 
 USER root
 
