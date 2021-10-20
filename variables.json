@@ -13,20 +13,5 @@
         "name": "PUID",
         "value": "1027",
         "serviceName": "*"
-    },
-    {
-        "name": "URL",
-        "value": "boulebar.duckdns.org",
-        "serviceName": "swag"
-    },
-    {
-        "name": "VALIDATION",
-        "value": "duckdns",
-        "serviceName": "swag"
-    },
-    {
-        "name": "DUCKDNSTOKEN",
-        "value": "",
-        "serviceName": "swag"
     }
 ]

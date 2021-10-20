@@ -1,4 +1,0 @@
-# https://hub.docker.com/r/adguard/adguardhome
-FROM --platform=linux/arm/v7 adguard/adguardhome:latest
-
-LABEL PERSON="Carlos"

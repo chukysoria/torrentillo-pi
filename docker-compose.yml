@@ -1,87 +1,54 @@
 version: '2.1'
 
 volumes:
-    adguardhome_work:
-    adguardhome_conf:
     sonarr_conf:
     radarr_conf:
     bazarr_conf:
-    swag_conf:
     jackett_conf:
-    nodered_conf:
-    certs:
-    traefik_conf:
 
 services:
 
-    adguard:
-        build:
-            context: .
-            dockerfile: Dockerfile-adguard
-        network_mode: host
-        privileged: true
-        volumes:
-            - 'adguardhome_work:/opt/adguardhome/work:rw'
-            - 'adguardhome_conf:/opt/adguardhome/conf:rw'
-        #labels: 
-        #    io.balena.update.strategy: hand-over
-    
     sonarr:
         build:
             context: .
             dockerfile: Dockerfile-sonarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'sonarr_conf:/config:rw'
-        #ports:
-        #    - 8989:8989
+        ports:
+            - 8989:8989
         networks: 
             - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
     radarr:
         build: 
             context: .
             dockerfile: Dockerfile-radarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'radarr_conf:/config:rw'
-        #ports:
-        #    - 7878:7878
+        ports:
+            - 7878:7878
         networks: 
             - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
     
     bazarr:
         build: 
             context: .
             dockerfile: Dockerfile-bazarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'bazarr_conf:/config:rw'
-        #ports:
-        #    - 6767:6767
+        ports:
+            - 6767:6767
         depends_on: 
             - sonarr
             - radarr
         networks: 
             - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
-
-    duckdns:
-        image: linuxserver/duckdns:arm32v7-latest
 
     jackett:
         image: linuxserver/jackett:arm32v7-latest
@@ -89,43 +56,10 @@ services:
             - AUTO_UPDATE=false
         volumes:
             - 'jackett_conf:/config:rw'
-        # ports:
-        #     - 9117:9117
-        networks: 
-            - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
-    
-    node-red:
-        build:
-            context: .
-            dockerfile: Dockerfile-nodered
-        # ports:
-        #    - 1880:1880
-        # cap_add:
-        #     - NET_BIND_SERVICE
-        privileged: true
-        volumes:
-            - nodered_conf:/data:rw
-        network_mode: host
-
-    traefik:
-        build:
-            context: .
-            dockerfile: Dockerfile-traefik
         ports:
-            - 80:80/tcp
-            - 443:443/tcp
-            - 8080:8080/tcp
+            - 9117:9117
         networks: 
             - web_net
-        volumes:
-            - "certs:/var/certs:rw"
-            - "traefik_conf:/etc/traefik/:rw"
-            #- /var/run/docker.sock:/var/run/docker.sock
-        labels:
-            - "io.balena.features.balena-socket=true"
    
 networks:
     web_net:
