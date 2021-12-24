@@ -1,4 +1,17 @@
 # https://hub.docker.com/r/nodered/node-red
 FROM --platform=linux/arm/v7 nodered/node-red:latest
 
+USER root
+
+RUN \
+ echo "**** install packages ****" && \
+ apk add --no-cache \
+	libpcap-dev && \
+ echo "**** clean up ****" && \
+ rm -rf \
+	/root/.cache \
+	/tmp/*
+
+USER node-red
+
 LABEL PERSON="Carlos"
