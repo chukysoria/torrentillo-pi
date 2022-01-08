@@ -1,13 +1,37 @@
 version: '2.1'
 
 volumes:
-    sonarr_conf:
-    radarr_conf:
-    bazarr_conf:
-    jackett_conf:
-
+    sonarr_conf: null
+    radarr_conf: null
+    bazarr_conf: null
+    jackett_conf: null
+    adguardhome_work: null
+    adguardhome_conf: null
+    duplicati: null
 services:
-
+    duplicati:
+        image: linuxserver/duplicati
+        environment:
+            PUID: "0"
+            PGID: "0"
+            CLI_ARGS: --webservice-interface=any
+        ports:
+            - 8200:8200/tcp
+        volumes:
+            - duplicati:/config
+            - sonarr_conf:/source/sonarr_conf
+            - radarr_conf:/source/radarr_conf 
+            - bazarr_conf:/source/bazarr_conf
+            - jackett_conf:/source/jackett_conf
+            - adguardhome_work:/source/adguardhome_work
+            - adguardhome_conf:/source/adguardhome_conf
+    adguard:
+        image: adguard/adguardhome
+        network_mode: host
+        privileged: true
+        volumes:
+            - 'adguardhome_work:/opt/adguardhome/work:rw'
+            - 'adguardhome_conf:/opt/adguardhome/conf:rw'
     sonarr:
         build:
             context: .
@@ -18,11 +42,11 @@ services:
             - 'sonarr_conf:/config:rw'
         ports:
             - 8989:8989
-        networks: 
+        networks:
             - web_net
 
     radarr:
-        build: 
+        build:
             context: .
             dockerfile: Dockerfile-radarr
         cap_add:
@@ -31,11 +55,11 @@ services:
             - 'radarr_conf:/config:rw'
         ports:
             - 7878:7878
-        networks: 
+        networks:
             - web_net
-    
+
     bazarr:
-        build: 
+        build:
             context: .
             dockerfile: Dockerfile-bazarr
         cap_add:
@@ -44,10 +68,10 @@ services:
             - 'bazarr_conf:/config:rw'
         ports:
             - 6767:6767
-        depends_on: 
+        depends_on:
             - sonarr
             - radarr
-        networks: 
+        networks:
             - web_net
 
     jackett:
@@ -58,9 +82,9 @@ services:
             - 'jackett_conf:/config:rw'
         ports:
             - 9117:9117
-        networks: 
+        networks:
             - web_net
-   
+
 networks:
     web_net:
         driver: bridge
