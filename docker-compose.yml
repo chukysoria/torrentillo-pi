@@ -5,14 +5,34 @@ volumes:
     adguardhome_conf:
     sonarr_conf:
     radarr_conf:
-    bazarr_conf:
-    swag_conf:
+    bazarr_conf:    
     jackett_conf:
-    nodered_conf:
+    #nodered_conf:
     certs:
     traefik_conf:
 
 services:
+    duplicati:
+        image: linuxserver/duplicati
+        environment:
+            PUID: "0"
+            PGID: "0"
+            CLI_ARGS: --webservice-interface=any
+        networks:
+          - web_net
+        ports:
+            - 8200:8200/tcp
+        volumes:
+            - duplicati:/config
+            - sonarr_conf:/source/sonarr_conf
+            - radarr_conf:/source/radarr_conf 
+            - bazarr_conf:/source/bazarr_conf
+            - jackett_conf:/source/jackett_conf
+            - adguardhome_conf:/source/adguardhome_conf
+            - traefik_conf:/source/traefik_conf
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.sonarr.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
     adguard:
         build:
@@ -97,18 +117,18 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
     
-    node-red:
-        build:
-            context: .
-            dockerfile: Dockerfile-nodered
-        # ports:
-        #    - 1880:1880
-        # cap_add:
-        #     - NET_BIND_SERVICE
-        privileged: true
-        volumes:
-            - nodered_conf:/data:rw
-        network_mode: host
+    #node-red:
+    #    build:
+    #        context: .
+    #        dockerfile: Dockerfile-nodered
+    #    ports:
+    #        - 1880:1880
+    # cap_add:
+    #     - NET_BIND_SERVICE
+    #    privileged: true
+    #    volumes:
+    #        - nodered_conf:/data:rw
+    #    network_mode: host
 
     traefik:
         build:
