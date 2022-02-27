@@ -10,6 +10,7 @@ volumes:
     #nodered_conf:
     certs:
     traefik_conf:
+    duplicati:
 
 services:
     duplicati:
@@ -20,8 +21,8 @@ services:
             CLI_ARGS: --webservice-interface=any
         networks:
           - web_net
-        ports:
-            - 8200:8200/tcp
+        #ports:
+        #    - 8200:8200/tcp
         volumes:
             - duplicati:/config
             - sonarr_conf:/source/sonarr_conf
@@ -32,12 +33,10 @@ services:
             - traefik_conf:/source/traefik_conf
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.sonarr.rule=Host(`duplicati.boulebar.duckdns.org`)"
+            - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
     adguard:
-        build:
-            context: .
-            dockerfile: Dockerfile-adguard
+        image: adguard/adguardhome:latest
         network_mode: host
         privileged: true
         #cap_add: 

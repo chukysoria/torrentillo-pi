@@ -12,4 +12,4 @@ http:
     adguard:
       loadBalancer:
         servers:
-        - url: http://192.168.1.3:3000
+        - url: http://192.168.1.2:3000
