@@ -6,10 +6,11 @@ log:
 api:
   insecure: true
 
+
 providers:
   docker:
-     endpoint: unix:///var/run/balena.sock
-     exposedbydefault: false
+    endpoint: unix:///var/run/balena.sock
+    exposedbydefault: false
   file:
     directory: /etc/traefik
     watch: true
@@ -25,7 +26,8 @@ entryPoints:
     address: ":443"
     http:
       middlewares:
-      - hsts-header@file
+        - hsts-header@file
+        - www-redirect@file
       tls:
         certResolver: letsencrypt
         options: modern@file
@@ -34,9 +36,31 @@ http:
   middlewares:
     hsts-header:
       headers:
+        accesscontrolallowmethods:
+          - GET
+          - OPTIONS
+          - PUT
+          - POST
+          - PATCH
+        accesscontrolmaxage: 100
+        addvaryheader: true
+        hostsproxyheaders: X-Forwarded-Host
+        stsseconds: 63072000
+        # stspreload: true
+        stsincludeSubDomains: true
+        forcestsheader: true
+        customFrameOptionsValue: SAMEORIGIN
+        contenttypenosniff: true
+        browserxssfilter: true
+        referrerpolicy: same-origin
+        permissionspolicy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(self), geolocation=(self), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(self), midi=(), navigation-override=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(self), usb=(), web-share=(), xr-spatial-tracking=()"
         customResponseHeaders:
-          Strict-Transport-Security: "max-age=63072000"
-
+          X-Robots-Tag: none,noarchive,nosnippet,notranslate,noimageindex,
+    www-redirect:
+      redirectRegex:
+        regex: ^https:\/\/www\.(.*)
+        replacement: https://${1}
+        permanent: true
 
 certificatesResolvers:
   letsencrypt:
@@ -56,4 +80,13 @@ certificatesResolvers:
 tls:
   options:
     modern:
-      minVersion = VersionTLS13
+      minversion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+      curvePreferences:
+        - X25519
+        - CurveP256
+        - CurveP384
+        - CurveP521

@@ -3,7 +3,14 @@ http:
   routers:
     homeassistant-to:
       service: homeassistant
-      rule: Host(`boulebar.duckdns.org`)
+      rule: Host(`boulebar.duckdns.org`) || Host(`www.boulebar.duckdns.org`)
+      middlewares:
+        - csp-homeassistant@file
+  middlewares:
+    csp-homeassistant:
+      headers:
+        contentsecuritypolicy:
+          - "default-src 'self'; connect-src 'self';font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;frame-src 'self';img-src 'self' data: https://*.basemaps.cartocdn.com https://*.githubusercontent.com https://drive.google.com https://evwilkin.github.io https://brands.home-assistant.io; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com;style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com/;worker-src 'self';frame-ancestors 'self'"
 
   # Add the service
   services:
