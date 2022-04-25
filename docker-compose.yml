@@ -152,6 +152,22 @@ services:
         labels:
             - "io.balena.features.balena-socket=true"
    
+    jellyfin:
+        build:
+            context: .
+            dockerfile: Dockerfile-jellyfin
+        cap_add:
+            - SYS_ADMIN
+        #ports:
+        #    - 8096:8096
+        #    - 7359:7359/udp
+        networks: 
+            - web_net
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.boulebar.duckdns.org`)"
+            - "traefik.http.routers.jellyfin.service=svc-jellyfin"
+            - "traefik.http.services.svc-jellyfin.loadbalancer.server.port=8096"
 networks:
     web_net:
         driver: bridge

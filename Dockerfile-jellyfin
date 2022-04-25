@@ -1,0 +1,18 @@
+# https://hub.docker.com/r/linuxserver/jellyfin
+FROM --platform=linux/arm lscr.io/linuxserver/jellyfin
+
+RUN \
+	echo "**** install packages ****" && \
+	apt-get update && \
+	apt-get install -y \
+	nfs-common && \
+	echo "**** cleanup ****" && \
+	apt-get clean && \
+	rm -rf \
+	/tmp/* \
+	/var/tmp/*
+
+# add local files
+COPY jellyfin/ /
+
+EXPOSE 7359/udp 1090/udp

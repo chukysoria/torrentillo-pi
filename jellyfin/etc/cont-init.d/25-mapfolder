@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+# create directories
+mkdir -p \
+    /config
+
+# NFS mounts
+mount -t nfs -o nolock $NFSCONFIG /config
+mount -t nfs -o nolock $NFSPATH /media
