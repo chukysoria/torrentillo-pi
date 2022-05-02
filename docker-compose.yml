@@ -14,7 +14,7 @@ volumes:
 
 services:
     duplicati:
-        image: linuxserver/duplicati
+        image: lscr.io/linuxserver/duplicati
         environment:
             PUID: "0"
             PGID: "0"
@@ -105,11 +105,11 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: linuxserver/duckdns:arm32v7-latest
+        image: lscr.io/linuxserver/duckdns:arm32v7-latest
         
 
     jackett:
-        image: linuxserver/jackett:arm32v7-latest
+        image: lscr.io/linuxserver/jackett:arm32v7-latest
         environment:
             - AUTO_UPDATE=false
         volumes:
