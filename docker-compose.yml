@@ -6,15 +6,16 @@ volumes:
     sonarr_conf:
     radarr_conf:
     bazarr_conf:    
-    jackett_conf:
+    #jackett_conf:
     #nodered_conf:
     certs:
     traefik_conf:
     duplicati:
+    prowlarr_conf:
 
 services:
     duplicati:
-        image: lscr.io/linuxserver/duplicati
+        image: lscr.io/linuxserver/duplicati:v2.0.6.3-2.0.6.3_beta_2021-06-17-ls131 # SIGSEV on later versions
         environment:
             PUID: "0"
             PGID: "0"
@@ -28,9 +29,10 @@ services:
             - sonarr_conf:/source/sonarr_conf
             - radarr_conf:/source/radarr_conf 
             - bazarr_conf:/source/bazarr_conf
-            - jackett_conf:/source/jackett_conf
+            #- jackett_conf:/source/jackett_conf
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
+            - prowlarr_conf:/source/prowlarr_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -108,19 +110,19 @@ services:
         image: lscr.io/linuxserver/duckdns:arm32v7-latest
         
 
-    jackett:
-        image: lscr.io/linuxserver/jackett:arm32v7-latest
-        environment:
-            - AUTO_UPDATE=false
-        volumes:
-            - 'jackett_conf:/config:rw'
-        # ports:
-        #     - 9117:9117
-        networks: 
-            - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
+    #jackett:
+    #    image: lscr.io/linuxserver/jackett:arm32v7-latest
+    #    environment:
+    #        - AUTO_UPDATE=false
+    #    volumes:
+    #        - 'jackett_conf:/config:rw'
+    #    # ports:
+    #    #     - 9117:9117
+    #    networks: 
+    #        - web_net
+    #    labels:
+    #        - "traefik.enable=true"
+    #        - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
     
     #node-red:
     #    build:
@@ -168,6 +170,18 @@ services:
             - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.boulebar.duckdns.org`)"
             - "traefik.http.routers.jellyfin.service=svc-jellyfin"
             - "traefik.http.services.svc-jellyfin.loadbalancer.server.port=8096"
+            - "traefik.udp.routers.jellyfinudp.service=servive-udp-jellyfin"
+    prowlarr:
+        image: lscr.io/linuxserver/prowlarr:develop
+        #ports:
+        #- "9696:9696"
+        networks:
+          - web_net
+        volumes:
+            - "prowlarr_conf:/config:rw"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
 networks:
     web_net:
         driver: bridge
