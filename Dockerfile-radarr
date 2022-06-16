@@ -3,14 +3,12 @@ FROM --platform=linux/arm lscr.io/linuxserver/radarr:latest
 
 RUN \
  echo "**** install packages ****" && \
- apt-get update && \
- apt-get install -y \
-        nfs-common && \
- echo "**** cleanup ****" && \
- apt-get clean && \
+ apk add --no-cache \
+	nfs-utils && \
+ echo "**** clean up ****" && \
  rm -rf \
-	/tmp/* \
-	/var/tmp/*
+	/root/.cache \
+	/tmp/*
 
 # add local files
 COPY root/ /
