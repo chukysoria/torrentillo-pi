@@ -5,7 +5,14 @@ log:
   level: INFO
 api:
   insecure: true
-
+experimental:
+  hub: true
+hub:
+  tls:
+    insecure: true
+metrics:
+  prometheus:
+    addRoutersLabels: true
 
 providers:
   docker:

@@ -5,13 +5,12 @@ volumes:
     adguardhome_conf:
     sonarr_conf:
     radarr_conf:
-    bazarr_conf:    
-    #jackett_conf:
-    #nodered_conf:
+    bazarr_conf:
     certs:
     traefik_conf:
     duplicati:
     prowlarr_conf:
+
 
 services:
     duplicati:
@@ -21,15 +20,12 @@ services:
             PGID: "0"
             CLI_ARGS: --webservice-interface=any
         networks:
-          - web_net
-        #ports:
-        #    - 8200:8200/tcp
+            - web_net
         volumes:
             - duplicati:/config
             - sonarr_conf:/source/sonarr_conf
-            - radarr_conf:/source/radarr_conf 
+            - radarr_conf:/source/radarr_conf
             - bazarr_conf:/source/bazarr_conf
-            #- jackett_conf:/source/jackett_conf
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
@@ -41,66 +37,50 @@ services:
         image: adguard/adguardhome:latest
         network_mode: host
         privileged: true
-        #cap_add: 
-        #    - SYS_ADMIN
-        #    - NET_ADMIN
-        #devices: 
-        #    - /dev/net/tun 
         volumes:
             - 'adguardhome_work:/opt/adguardhome/work:rw'
             - 'adguardhome_conf:/opt/adguardhome/conf:rw'
-        #labels: 
-        #    io.balena.update.strategy: hand-over
-    
+
     sonarr:
         build:
             context: .
             dockerfile: Dockerfile-sonarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'sonarr_conf:/config:rw'
-        #ports:
-        #    - 8989:8989
-        networks: 
+        networks:
             - web_net
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
     radarr:
-        build: 
+        build:
             context: .
             dockerfile: Dockerfile-radarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'radarr_conf:/config:rw'
-        #ports:
-        #    - 7878:7878
-        networks: 
+        networks:
             - web_net
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
-    
+
     bazarr:
-        build: 
+        build:
             context: .
             dockerfile: Dockerfile-bazarr
-        #privileged: true
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'bazarr_conf:/config:rw'
-        #ports:
-        #    - 6767:6767
-        depends_on: 
+        depends_on:
             - sonarr
             - radarr
-        networks: 
+        networks:
             - web_net
         labels:
             - "traefik.enable=true"
@@ -108,34 +88,6 @@ services:
 
     duckdns:
         image: lscr.io/linuxserver/duckdns:arm32v7-latest
-        
-
-    #jackett:
-    #    image: lscr.io/linuxserver/jackett:arm32v7-latest
-    #    environment:
-    #        - AUTO_UPDATE=false
-    #    volumes:
-    #        - 'jackett_conf:/config:rw'
-    #    # ports:
-    #    #     - 9117:9117
-    #    networks: 
-    #        - web_net
-    #    labels:
-    #        - "traefik.enable=true"
-    #        - "traefik.http.routers.jackett.rule=Host(`jackett.boulebar.duckdns.org`)"
-    
-    #node-red:
-    #    build:
-    #        context: .
-    #        dockerfile: Dockerfile-nodered
-    #    ports:
-    #        - 1880:1880
-    # cap_add:
-    #     - NET_BIND_SERVICE
-    #    privileged: true
-    #    volumes:
-    #        - nodered_conf:/data:rw
-    #    network_mode: host
 
     traefik:
         build:
@@ -145,43 +97,61 @@ services:
             - 80:80/tcp
             - 443:443/tcp
             - 8080:8080/tcp
-        networks: 
+            - 9900:9900/tcp
+            - 9901:9901/tcp
+        networks:
             - web_net
         volumes:
             - "certs:/var/certs:rw"
             - "traefik_conf:/etc/traefik/:rw"
-            #- /var/run/docker.sock:/var/run/docker.sock
         labels:
             - "io.balena.features.balena-socket=true"
-   
+
     jellyfin:
         build:
             context: .
             dockerfile: Dockerfile-jellyfin
         cap_add:
             - SYS_ADMIN
-        #ports:
-        #    - 8096:8096
-        #    - 7359:7359/udp
-        networks: 
+        networks:
             - web_net
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.boulebar.duckdns.org`)"
             - "traefik.http.routers.jellyfin.service=svc-jellyfin"
             - "traefik.http.services.svc-jellyfin.loadbalancer.server.port=8096"
-            - "traefik.udp.routers.jellyfinudp.service=servive-udp-jellyfin"
+            - "traefik.udp.routers.jellyfinudp.entrypoints=jellyfin_locate"
+            - "traefik.udp.routers.jellyfinudp.service=service-udp-jellyfin"
+            - "traefik.udp.services.service-udp-jellyfin.loadbalancer.server.port=7359"
+            - "traefik.udp.routers.jellyfinstreaming.entrypoints=streaming"
+            - "traefik.udp.routers.jellyfinstreaming.service=service-jellyfin-streaming"
+            - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
     prowlarr:
         image: lscr.io/linuxserver/prowlarr:develop
-        #ports:
-        #- "9696:9696"
         networks:
-          - web_net
+            - web_net
         volumes:
             - "prowlarr_conf:/config:rw"
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
+
+    hub-agent:
+        image: ghcr.io/traefik/hub-agent-traefik:v0.7.0
+        container_name: hub-agent
+        command:
+            - run
+            - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
+            - --auth-server.advertise-url=http://hub-agent
+            - --traefik.host=traefik
+            - --traefik.tls.insecure=true
+        labels:
+            - "io.balena.features.balena-socket=true"
+        depends_on:
+            - traefik
+        networks:
+            - web_net
+
 networks:
     web_net:
         driver: bridge
