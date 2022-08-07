@@ -137,12 +137,13 @@ services:
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
 
     hub-agent:
-        image: ghcr.io/traefik/hub-agent-traefik:v0.7.0
+        image: ghcr.io/traefik/hub-agent-traefik:latest
         container_name: hub-agent
         command:
             - run
             - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
             - --auth-server.advertise-url=http://hub-agent
+            - --traefik.docker.endpoint=unix:///var/run/balena.sock
             - --traefik.host=traefik
             - --traefik.tls.insecure=true
         labels:
