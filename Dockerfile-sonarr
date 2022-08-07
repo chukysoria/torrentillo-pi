@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/linuxserver/sonarr
-FROM --platform=linux/arm lscr.io/linuxserver/sonarr:latest
+FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
 
 RUN \
  echo "**** install packages ****" && \
