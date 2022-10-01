@@ -1,5 +1,5 @@
-# https://hub.docker.com/r/linuxserver/sonarr
-FROM --platform=linux/arm lscr.io/linuxserver/bazarr:latest
+# https://hub.docker.com/r/linuxserver/deluge
+FROM --platform=linux/arm lscr.io/linuxserver/deluge:latest
 
 RUN \
  echo "**** install packages ****" && \
@@ -9,7 +9,6 @@ RUN \
  rm -rf \
 	/root/.cache \
 	/tmp/*
-
 
 # add local files
 COPY root/ /
