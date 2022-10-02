@@ -10,6 +10,7 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
+    deluge_conf:
 
 
 services:
@@ -29,6 +30,7 @@ services:
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
+            - deluge_conf:/source/deluge_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -152,6 +154,26 @@ services:
     #        - traefik
     #    networks:
     #        - web_net
+
+
+    deluge:
+        build:
+            context: .
+            dockerfile: Dockerfile-deluge
+        cap_add:
+            - SYS_ADMIN
+        volumes:
+            - 'deluge_conf:/config:rw'
+        networks:
+            - web_net
+        ports:
+            - 6881:6881
+            - 6881:6881/udp
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.deluge.rule=Host(`deluge.boulebar.duckdns.org`)"
+            - "traefik.http.routers.deluge.service=svc-deluge"
+            - "traefik.http.services.svc-deluge.loadbalancer.server.port=8112"
 
 networks:
     web_net:
