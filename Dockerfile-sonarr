@@ -4,6 +4,7 @@ FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
 RUN \
  echo "**** install packages ****" && \
  apt-get update && \
+ apt-get dist-upgrade -y && \
  apt-get install -y \
         nfs-common && \
  echo "**** cleanup ****" && \

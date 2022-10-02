@@ -97,8 +97,8 @@ services:
             - 80:80/tcp
             - 443:443/tcp
             - 8080:8080/tcp
-            - 9900:9900/tcp
-            - 9901:9901/tcp
+            #- 9900:9900/tcp
+            #- 9901:9901/tcp
         networks:
             - web_net
         volumes:
@@ -136,22 +136,22 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
 
-    hub-agent:
-        image: ghcr.io/traefik/hub-agent-traefik:latest
-        container_name: hub-agent
-        command:
-            - run
-            - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
-            - --auth-server.advertise-url=http://hub-agent
-            - --traefik.docker.endpoint=unix:///var/run/balena.sock
-            - --traefik.host=traefik
-            - --traefik.tls.insecure=true
-        labels:
-            - "io.balena.features.balena-socket=true"
-        depends_on:
-            - traefik
-        networks:
-            - web_net
+    #hub-agent:
+    #    image: ghcr.io/traefik/hub-agent-traefik:latest
+    #    container_name: hub-agent
+    #    command:
+    #        - run
+    #        - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
+    #        - --auth-server.advertise-url=http://hub-agent
+    #        - --traefik.docker.endpoint=unix:///var/run/balena.sock
+    #        - --traefik.host=traefik
+    #        - --traefik.tls.insecure=true
+    #    labels:
+    #        - "io.balena.features.balena-socket=true"
+    #    depends_on:
+    #        - traefik
+    #    networks:
+    #        - web_net
 
 networks:
     web_net:
