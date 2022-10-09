@@ -10,7 +10,7 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
-    deluge_conf:
+    qbittorrent_conf:
 
 
 services:
@@ -30,7 +30,7 @@ services:
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
-            - deluge_conf:/source/deluge_conf
+            - qbittorrent_conf:/source/qbittorrent_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -156,24 +156,24 @@ services:
     #        - web_net
 
 
-    deluge:
+    qbittorrent:
         build:
             context: .
-            dockerfile: Dockerfile-deluge
+            dockerfile: Dockerfile-qbittorrent
         cap_add:
             - SYS_ADMIN
         volumes:
-            - 'deluge_conf:/config:rw'
+            - 'qbittorrent_conf:/config:rw'
         networks:
             - web_net
         ports:
-            - 6881:6881
-            - 6881:6881/udp
+            - 6882:6882
+            - 6882:6882/udp
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.deluge.rule=Host(`deluge.boulebar.duckdns.org`)"
-            - "traefik.http.routers.deluge.service=svc-deluge"
-            - "traefik.http.services.svc-deluge.loadbalancer.server.port=8112"
+            - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.boulebar.duckdns.org`)"
+            - "traefik.http.routers.qbittorrent.service=svc-qbittorrent"
+            - "traefik.http.services.svc-qbittorrent.loadbalancer.server.port=8080"
 
 networks:
     web_net:
