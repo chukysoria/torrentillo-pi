@@ -10,7 +10,6 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
-    qbittorrent_conf:
 
 
 services:
@@ -30,7 +29,6 @@ services:
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
-            - qbittorrent_conf:/source/qbittorrent_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -154,26 +152,6 @@ services:
     #        - traefik
     #    networks:
     #        - web_net
-
-
-    qbittorrent:
-        build:
-            context: .
-            dockerfile: Dockerfile-qbittorrent
-        cap_add:
-            - SYS_ADMIN
-        volumes:
-            - 'qbittorrent_conf:/config:rw'
-        networks:
-            - web_net
-        ports:
-            - 6882:6882
-            - 6882:6882/udp
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.boulebar.duckdns.org`)"
-            - "traefik.http.routers.qbittorrent.service=svc-qbittorrent"
-            - "traefik.http.services.svc-qbittorrent.loadbalancer.server.port=8080"
 
 networks:
     web_net:
