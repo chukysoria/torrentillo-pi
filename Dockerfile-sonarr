@@ -2,7 +2,7 @@
 FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
 
 # Update this date to re-run apt-get.
-LABEL package.date=2022-10-18
+LABEL package.date=2022-11-24
 
 RUN \
  echo "**** install packages ****" && \
