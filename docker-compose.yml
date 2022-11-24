@@ -10,7 +10,6 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
-    deluge_conf:
 
 
 services:
@@ -30,7 +29,6 @@ services:
             - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
-            - deluge_conf:/source/deluge_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -99,6 +97,8 @@ services:
             - 80:80/tcp
             - 443:443/tcp
             - 8080:8080/tcp
+            #- 9900:9900/tcp
+            #- 9901:9901/tcp
         networks:
             - web_net
         volumes:
@@ -136,14 +136,14 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
 
-    # hub-agent:
+    #hub-agent:
     #    image: ghcr.io/traefik/hub-agent-traefik:latest
     #    container_name: hub-agent
     #    command:
     #        - run
     #        - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
     #        - --auth-server.advertise-url=http://hub-agent
-    #        - --##k#.docker.endpoint=unix:///var/run/balena.sock
+    #        - --traefik.docker.endpoint=unix:///var/run/balena.sock
     #        - --traefik.host=traefik
     #        - --traefik.tls.insecure=true
     #    labels:
@@ -152,24 +152,6 @@ services:
     #        - traefik
     #    networks:
     #        - web_net
-
-
-    deluge:
-        build:
-            context: .
-            dockerfile: Dockerfile-deluge
-        cap_add:
-            - SYS_ADMIN
-        volumes:
-            - 'deluge_conf:/config:rw'
-        networks:
-            - web_net
-        ports:
-            - 6881:6881
-            - 6881:6881/udp
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.sonarr.rule=Host(`deluge.boulebar.duckdns.org`)"
 
 networks:
     web_net:

@@ -1,9 +1,13 @@
 # https://hub.docker.com/r/linuxserver/sonarr
 FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
 
+# Update this date to re-run apt-get.
+LABEL package.date=2022-11-24
+
 RUN \
  echo "**** install packages ****" && \
  apt-get update && \
+ apt-get dist-upgrade -y && \
  apt-get install -y \
         nfs-common && \
  echo "**** cleanup ****" && \
