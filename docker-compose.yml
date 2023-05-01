@@ -33,13 +33,13 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
-    adguard:
-        image: adguard/adguardhome:latest
-        network_mode: host
-        privileged: true
-        volumes:
-            - 'adguardhome_work:/opt/adguardhome/work:rw'
-            - 'adguardhome_conf:/opt/adguardhome/conf:rw'
+    #adguard:
+    #    image: adguard/adguardhome:latest
+    #    network_mode: host
+    #    privileged: true
+    #    volumes:
+    #        - 'adguardhome_work:/opt/adguardhome/work:rw'
+    #        - 'adguardhome_conf:/opt/adguardhome/conf:rw'
 
     sonarr:
         build:
@@ -55,19 +55,19 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
-    radarr:
-        build:
-            context: .
-            dockerfile: Dockerfile-radarr
-        cap_add:
-            - SYS_ADMIN
-        volumes:
-            - 'radarr_conf:/config:rw'
-        networks:
-            - web_net
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
+    #radarr:
+    #    build:
+    #        context: .
+    #        dockerfile: Dockerfile-radarr
+    #    cap_add:
+    #        - SYS_ADMIN
+    #    volumes:
+    #        - 'radarr_conf:/config:rw'
+    #    networks:
+    #        - web_net
+    #    labels:
+    #        - "traefik.enable=true"
+    #        - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
 
     bazarr:
         build:
@@ -79,7 +79,7 @@ services:
             - 'bazarr_conf:/config:rw'
         depends_on:
             - sonarr
-            - radarr
+        #    - radarr
         networks:
             - web_net
         labels:
@@ -127,7 +127,8 @@ services:
             - "traefik.udp.routers.jellyfinstreaming.service=service-jellyfin-streaming"
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
     prowlarr:
-        image: lscr.io/linuxserver/prowlarr:develop
+        container_name: prolarr
+        image: lscr.io/linuxserver/prowlarr:latest
         networks:
             - web_net
         volumes:
