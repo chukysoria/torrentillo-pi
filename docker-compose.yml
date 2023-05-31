@@ -33,14 +33,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
-    #adguard:
-    #    image: adguard/adguardhome:latest
-    #    network_mode: host
-    #    privileged: true
-    #    volumes:
-    #        - 'adguardhome_work:/opt/adguardhome/work:rw'
-    #        - 'adguardhome_conf:/opt/adguardhome/conf:rw'
-
     sonarr:
         build:
             context: .
@@ -55,20 +47,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
-    #radarr:
-    #    build:
-    #        context: .
-    #        dockerfile: Dockerfile-radarr
-    #    cap_add:
-    #        - SYS_ADMIN
-    #    volumes:
-    #        - 'radarr_conf:/config:rw'
-    #    networks:
-    #        - web_net
-    #    labels:
-    #        - "traefik.enable=true"
-    #        - "traefik.http.routers.radarr.rule=Host(`radarr.boulebar.duckdns.org`)"
-
     bazarr:
         build:
             context: .
@@ -79,7 +57,6 @@ services:
             - 'bazarr_conf:/config:rw'
         depends_on:
             - sonarr
-        #    - radarr
         networks:
             - web_net
         labels:
@@ -136,23 +113,6 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"
-
-    #hub-agent:
-    #    image: ghcr.io/traefik/hub-agent-traefik:latest
-    #    container_name: hub-agent
-    #    command:
-    #        - run
-    #        - --hub.token=20d78749-e7d2-428f-a0ca-a359272e8ec4
-    #        - --auth-server.advertise-url=http://hub-agent
-    #        - --traefik.docker.endpoint=unix:///var/run/balena.sock
-    #        - --traefik.host=traefik
-    #        - --traefik.tls.insecure=true
-    #    labels:
-    #        - "io.balena.features.balena-socket=true"
-    #    depends_on:
-    #        - traefik
-    #    networks:
-    #        - web_net
 
 networks:
     web_net:

@@ -2,7 +2,7 @@
 FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
 
 # Update this date to re-run apt-get.
-LABEL package.date=2023-04-15
+LABEL package.date=2023-05-31
 
 RUN \
  echo "**** install packages ****" && \
@@ -14,7 +14,8 @@ RUN \
  apt-get clean && \
  rm -rf \
 	/tmp/* \
-	/var/tmp/*
+	/var/tmp/* \
+	/var/lib/apt/lists/*
 
 # add local files
 COPY root/ /
