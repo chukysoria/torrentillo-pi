@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/linuxserver/jellyfin
-FROM --platform=linux/arm lscr.io/linuxserver/jellyfin
+FROM --platform=linux/arm lscr.io/linuxserver/jellyfin:arm32v7-version-10.8.10-1
 
 RUN \
 	echo "**** install packages ****" && \

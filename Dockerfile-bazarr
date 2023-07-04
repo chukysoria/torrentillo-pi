@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/linuxserver/sonarr
-FROM --platform=linux/arm lscr.io/linuxserver/bazarr:latest
+FROM --platform=linux/arm lscr.io/linuxserver/bazarr:arm32v7-v1.2.2-ls200
 
 RUN \
  echo "**** install packages ****" && \

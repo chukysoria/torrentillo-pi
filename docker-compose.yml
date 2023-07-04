@@ -1,8 +1,6 @@
 version: '2.1'
 
 volumes:
-    adguardhome_work:
-    adguardhome_conf:
     sonarr_conf:
     radarr_conf:
     bazarr_conf:
@@ -14,7 +12,9 @@ volumes:
 
 services:
     duplicati:
-        image: lscr.io/linuxserver/duplicati:v2.0.6.3-2.0.6.3_beta_2021-06-17-ls131 # SIGSEV on later versions
+        build:
+            context: .
+            dockerfile: Dockerfile-duplicati
         environment:
             PUID: "0"
             PGID: "0"
@@ -26,7 +26,6 @@ services:
             - sonarr_conf:/source/sonarr_conf
             - radarr_conf:/source/radarr_conf
             - bazarr_conf:/source/bazarr_conf
-            - adguardhome_conf:/source/adguardhome_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
         labels:
@@ -64,7 +63,7 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: lscr.io/linuxserver/duckdns:arm32v7-latest
+        image: lscr.io/linuxserver/duckdns:arm32v7-fb872cca-ls130
 
     traefik:
         build:
@@ -105,7 +104,7 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
     prowlarr:
         container_name: prolarr
-        image: lscr.io/linuxserver/prowlarr:latest
+        image: lscr.io/linuxserver/prowlarr:arm32v7-1.5.2.3484-ls20
         networks:
             - web_net
         volumes:
