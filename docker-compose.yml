@@ -8,6 +8,7 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
+    jellyfin_conf_tailscale:
 
 
 services:
@@ -28,6 +29,7 @@ services:
             - bazarr_conf:/source/bazarr_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
+            - jellyfin_conf_tailscale:/source/jellyfin_conf_tailscale
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -42,6 +44,12 @@ services:
             - 'sonarr_conf:/config:rw'
         networks:
             - web_net
+        environment:
+            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_HOSTNAME=sonarr
+            - TAILSCALE_SERVE_PORT=8989
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_FUNNEL=true
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
@@ -58,6 +66,13 @@ services:
             - sonarr
         networks:
             - web_net
+        environment:
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_HOSTNAME=bazarr
+            - TAILSCALE_SERVE_PORT=6767
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_FUNNEL=true
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
@@ -91,6 +106,15 @@ services:
             - SYS_ADMIN
         networks:
             - web_net
+        environment:
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - TAILSCALE_STATE_DIR=/var/lib/tailscale
+            - TAILSCALE_HOSTNAME=jellyfin
+            - TAILSCALE_SERVE_PORT=8096
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_FUNNEL=true
+        volumes:
+          - jellyfin_conf_tailscale:/var/lib/tailscale:rw
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.boulebar.duckdns.org`)"
@@ -102,6 +126,7 @@ services:
             - "traefik.udp.routers.jellyfinstreaming.entrypoints=streaming"
             - "traefik.udp.routers.jellyfinstreaming.service=service-jellyfin-streaming"
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
+
     prowlarr:
         container_name: prolarr
         image: lscr.io/linuxserver/prowlarr:arm32v7-1.5.2.3484-ls20
@@ -109,6 +134,13 @@ services:
             - web_net
         volumes:
             - "prowlarr_conf:/config:rw"
+        environment:
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_HOSTNAME=prowlarr
+            - TAILSCALE_SERVE_PORT=9696
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_FUNNEL=true
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.boulebar.duckdns.org`)"

@@ -4,7 +4,10 @@ FROM --platform=linux/arm lscr.io/linuxserver/bazarr:arm32v7-v1.2.2-ls200
 RUN \
  echo "**** install packages ****" && \
  apk add --no-cache \
-	nfs-utils && \
+	nfs-utils \
+	curl \
+	jq \
+	iptables && \
  echo "**** clean up ****" && \
  rm -rf \
 	/root/.cache \
