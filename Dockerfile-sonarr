@@ -23,6 +23,3 @@ RUN \
 
 # add local files
 COPY root/ /
-
-# Copy Tailscale
-COPY tailscale/ /
