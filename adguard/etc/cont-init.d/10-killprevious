@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv sh
-
-touch $BALENA_SERVICE_HANDOVER_COMPLETE_PATH
