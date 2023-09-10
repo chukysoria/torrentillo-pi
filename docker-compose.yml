@@ -101,7 +101,7 @@ services:
         environment:
             - TAILSCALE_STATE_DIR=/config
         volumes:
-            - "traefik_conf:/config:rw"
+            - "traefik_tailscale_conf:/config:rw"
 
     jellyfin:
         build:
