@@ -1,0 +1,14 @@
+# https://hub.docker.com/_/traefik
+# FROM --platform=linux/arm traefik:latest
+FROM ghcr.io/chukysoria/traefik:latest
+
+RUN \
+ echo "**** install packages ****" && \
+ apk add --no-cache \
+	iptables && \
+ echo "**** clean up ****" && \
+ rm -rf \
+	/root/.cache \
+	/tmp/*
+
+COPY traefik-tailscale/ /config

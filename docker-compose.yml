@@ -8,8 +8,7 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
-    jellyfin_conf_tailscale:
-
+    traefik_tailscale_conf:
 
 services:
     duplicati:
@@ -29,6 +28,7 @@ services:
             - bazarr_conf:/source/bazarr_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
+            - traefik_tailscale_conf:/source/traefik_tailscale_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
@@ -80,7 +80,7 @@ services:
         ports:
             - 80:80/tcp
             - 443:443/tcp
-            - 8080:8080/tcp
+            - 8081:8080/tcp
             #- 9900:9900/tcp
             #- 9901:9901/tcp
         networks:
@@ -93,13 +93,20 @@ services:
         labels:
             - "io.balena.features.balena-socket=true"
 
+    traefik_tailscale:
+        build: 
+            context: .
+            dockerfile: Dockerfile-traefik-tailscale
+        network_mode: host
+        environment:
+            - TAILSCALE_STATE_DIR=/config
+        volumes:
+            - "traefik_conf:/config:rw"
+
     jellyfin:
         build:
             context: .
             dockerfile: Dockerfile-jellyfin
-        privileged: true
-        cap_add:
-            - SYS_ADMIN
         networks:
             - web_net
         environment:
@@ -107,8 +114,6 @@ services:
             - TAILSCALE_HOSTNAME=jellyfin
             - TAILSCALE_SERVE_PORT=8096
         labels:
-            - "io.balena.features.firmware=1"
-            - "io.balena.features.dbus=1"
             - "traefik.enable=true"
             - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.boulebar.duckdns.org`)"
             - "traefik.http.routers.jellyfin.service=svc-jellyfin"
