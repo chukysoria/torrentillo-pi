@@ -27,7 +27,6 @@ services:
             - bazarr_conf:/source/bazarr_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
-            - traefik_tailscale_conf:/source/traefik_tailscale_conf
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
