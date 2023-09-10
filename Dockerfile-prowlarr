@@ -1,17 +1,13 @@
-# https://hub.docker.com/r/linuxserver/sonarr
-# FROM --platform=linux/arm lscr.io/linuxserver/bazarr:arm32v7-v1.2.2-ls200
-FROM ghcr.io/chukysoria/bazarr:latest
+FROM ghcr.io/chukysoria/prowlarr:latest
 
 RUN \
  echo "**** install packages ****" && \
  apk add --no-cache \
-	nfs-utils \
 	iptables && \
  echo "**** clean up ****" && \
  rm -rf \
 	/root/.cache \
 	/tmp/*
-
 
 # add local files
 COPY root/ /

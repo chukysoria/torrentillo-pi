@@ -10,8 +10,6 @@ RUN \
  apt-get dist-upgrade -y && \
  apt-get install -y \
 	nfs-common \
-	curl \
-	jq \
 	iptables && \
  echo "**** cleanup ****" && \
  apt-get clean && \

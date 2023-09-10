@@ -5,8 +5,6 @@ RUN \
  echo "**** install packages ****" && \
  apk add --no-cache \
 	nfs-utils \
-	curl \
-	jq \
 	iptables && \
  echo "**** clean up ****" && \
  rm -rf \

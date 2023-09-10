@@ -72,12 +72,11 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: lscr.io/linuxserver/duckdns:arm32v7-fb872cca-ls130
+        # image: lscr.io/linuxserver/duckdns:arm32v7-fb872cca-ls130
+        image: ghcr.io/chukysoria/duckdns:latest
 
     traefik:
-        build:
-            context: .
-            dockerfile: Dockerfile-traefik
+        image: ghcr.io/chukysoria/traefik:latest
         ports:
             - 80:80/tcp
             - 443:443/tcp
@@ -86,9 +85,11 @@ services:
             #- 9901:9901/tcp
         networks:
             - web_net
+        environment:
+            - DOCKER_SOCK=/var/run/balena.sock
         volumes:
-            - "certs:/var/certs:rw"
-            - "traefik_conf:/etc/traefik/:rw"
+            - "certs:/certs:rw"
+            - "traefik_conf:/config:rw"
         labels:
             - "io.balena.features.balena-socket=true"
 
@@ -117,8 +118,10 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
 
     prowlarr:
-        container_name: prolarr
-        image: lscr.io/linuxserver/prowlarr:arm32v7-1.5.2.3484-ls20
+        # image: lscr.io/linuxserver/prowlarr:arm32v7-1.5.2.3484-ls20
+        build:
+            context: .
+            dockerfile: Dockerfile-prowlarr
         networks:
             - web_net
         volumes:

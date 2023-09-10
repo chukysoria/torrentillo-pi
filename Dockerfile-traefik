@@ -1,10 +1,5 @@
 # https://hub.docker.com/_/traefik
-FROM --platform=linux/arm traefik:latest
+# FROM --platform=linux/arm traefik:latest
+FROM ghcr.io/chukysoria/traefik:latest
 
-COPY traefik-confs/ /etc/traefik/
-
-WORKDIR /etc/traefik
-
-VOLUME /var/certs
-
-EXPOSE 80/tcp 443/tcp 8080/tcp 9900/tcp 9901/tcp
+COPY traefik-confs/ /config
