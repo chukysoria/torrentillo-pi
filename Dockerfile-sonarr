@@ -1,13 +1,10 @@
 # https://hub.docker.com/r/linuxserver/sonarr
-FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
-
-# Update this date to re-run apt-get.
-LABEL package.date=2023-08-31
+# FROM --platform=linux/arm lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
+FROM ghcr.io/chukysoria/sonarr-latest
 
 RUN \
  echo "**** install packages ****" && \
  apt-get update && \
- apt-get dist-upgrade -y && \
  apt-get install -y \
 	nfs-common \
 	iptables && \
