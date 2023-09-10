@@ -1,0 +1,24 @@
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+    branches:
+      - main
+      - master
+
+jobs:
+  balena_cloud_build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Chekout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to Balena
+      uses: balena-io/deploy-to-balena-action@master
+      id: build
+      with:
+        balena_token: ${{ secrets.BALENA_TOKEN }}
+        fleet: g_carlos_s_nchez_mateo/torrentillo
+
+    - name: Log release ID built
+      run: |
+        echo "Built release ID ${{ steps.build.outputs.release_id }}" | tee -a $GITHUB_STEP_SUMMARY
