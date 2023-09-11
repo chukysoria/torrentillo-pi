@@ -16,8 +16,6 @@ services:
             context: .
             dockerfile: Dockerfile-duplicati
         environment:
-            PUID: "0"
-            PGID: "0"
             CLI_ARGS: --webservice-interface=any
         networks:
             - web_net
@@ -78,8 +76,8 @@ services:
     traefik:
         image: ghcr.io/chukysoria/traefik:latest
         ports:
-            - 80:80/tcp
-            - 443:443/tcp
+            - 8080:80/tcp
+            - 8443:443/tcp
             - 8081:8080/tcp
             #- 9900:9900/tcp
             #- 9901:9901/tcp
@@ -100,7 +98,7 @@ services:
         network_mode: host
         environment:
             - TAILSCALE_STATE_DIR=/config
-            - TAILSCALE_HOSTNAME=treafik
+            - TAILSCALE_HOSTNAME=traefik
         volumes:
             - "traefik_tailscale_conf:/config:rw"
 
@@ -108,6 +106,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-jellyfin
+        cap_add:
+            - SYS_ADMIN
         networks:
             - web_net
         environment:
