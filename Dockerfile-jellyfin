@@ -18,5 +18,3 @@ RUN \
 
 # add local files
 COPY jellyfin/ /
-
-EXPOSE 7359/udp 1090/udp

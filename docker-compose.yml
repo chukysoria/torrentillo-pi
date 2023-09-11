@@ -16,7 +16,9 @@ services:
             context: .
             dockerfile: Dockerfile-duplicati
         environment:
-            CLI_ARGS: --webservice-interface=any
+            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_HOSTNAME=duplicati
+            - TAILSCALE_SERVE_PORT=8200
         networks:
             - web_net
         volumes:
