@@ -15,4 +15,4 @@ RUN \
 
 
 # add local files
-COPY root2/ /
+COPY root/ /
