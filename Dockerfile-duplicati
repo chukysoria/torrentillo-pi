@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM lscr.io/chukysoria/duplicati:latest
+FROM ghcr.io/chukysoria/duplicati:latest
 
 RUN \
 	echo "**** install packages ****" && \
