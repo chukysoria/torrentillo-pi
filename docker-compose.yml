@@ -2,7 +2,6 @@ version: '2.1'
 
 volumes:
     sonarr_conf:
-    radarr_conf:
     bazarr_conf:
     certs:
     traefik_conf:
@@ -24,7 +23,6 @@ services:
         volumes:
             - duplicati:/config
             - sonarr_conf:/source/sonarr_conf
-            - radarr_conf:/source/radarr_conf
             - bazarr_conf:/source/bazarr_conf
             - traefik_conf:/source/traefik_conf
             - prowlarr_conf:/source/prowlarr_conf
