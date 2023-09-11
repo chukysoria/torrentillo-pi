@@ -81,6 +81,8 @@ services:
             - 8080:80/tcp
             - 8443:443/tcp
             - 8091:8080/tcp
+            - 1900:1900/udp
+            - 7359:7359/udp
         networks:
             - web_net
         environment:
@@ -97,7 +99,7 @@ services:
         build: 
             context: .
             dockerfile: Dockerfile-traefik
-        #network_mode: host
+        network_mode: host
         ports:
             - 80:80/tcp
             - 443:443/tcp
