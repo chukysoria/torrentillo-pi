@@ -8,6 +8,7 @@ volumes:
     traefik_conf:
     duplicati:
     prowlarr_conf:
+    traefik_tailscale_conf:
 
 services:
     duplicati:
@@ -75,24 +76,33 @@ services:
         image: ghcr.io/chukysoria/duckdns:latest
 
     traefik:
-        build: 
-            context: .
-            dockerfile: Dockerfile-traefik
+        image: ghcr.io/chukysoria/traefik:latest
         ports:
             - 80:80/tcp
             - 443:443/tcp
-            - 8080:8080/tcp
+            - 8081:8080/tcp
+            #- 9900:9900/tcp
+            #- 9901:9901/tcp
         networks:
             - web_net
         environment:
             - DOCKER_SOCK=/var/run/balena.sock
-            - TAILSCALE_STATE_DIR=/config
-            - TAILSCALE_HOSTNAME=treafik
         volumes:
             - "certs:/certs:rw"
             - "traefik_conf:/config:rw"
         labels:
             - "io.balena.features.balena-socket=true"
+
+    traefik_tailscale:
+        build: 
+            context: .
+            dockerfile: Dockerfile-traefik-tailscale
+        network_mode: host
+        environment:
+            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_HOSTNAME=treafik
+        volumes:
+            - "traefik_tailscale_conf:/config:rw"
 
     jellyfin:
         build:
