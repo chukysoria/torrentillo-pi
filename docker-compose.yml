@@ -90,6 +90,8 @@ services:
             - 8080:8080/tcp
             - 1900:1900/udp
             - 7359:7359/udp
+        cap_add:
+            - SYS_ADMIN
         networks:
             - web_net
         environment:
@@ -107,6 +109,8 @@ services:
             context: .
             dockerfile: Dockerfile-traefik
         network_mode: host
+        cap_add:
+            - SYS_ADMIN
         environment:
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik-tailscale
