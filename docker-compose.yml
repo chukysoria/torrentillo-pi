@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2.4'
 
 # Torrentillo Pi compose file
 
@@ -10,6 +10,15 @@ volumes:
     duplicati:
     prowlarr_conf:
     traefik_tailscale_conf:
+    # Tailscale config volumes
+    ts_duplicati:
+    ts_sonarr:
+    ts_bazarr:
+    ts_traefik:
+    ts_traefik_tailscale:
+    ts_jellyfin:
+    ts_prowlarr:
+
 
 services:
     duplicati:
@@ -18,13 +27,14 @@ services:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=duplicati
             - TAILSCALE_SERVE_PORT=8200
         networks:
             - web_net
         volumes:
             - duplicati:/config
+            - ts_duplicati:/tsconfig
             - sonarr_conf:/source/sonarr_conf
             - bazarr_conf:/source/bazarr_conf
             - traefik_conf:/source/traefik_conf
@@ -39,7 +49,8 @@ services:
         cap_add:
             - SYS_ADMIN
         volumes:
-            - 'sonarr_conf:/config:rw'
+            - sonarr_conf:/config:rw
+            - ts_sonarr:/tsconfig
         networks:
             - web_net
         environment:
@@ -47,7 +58,7 @@ services:
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=sonarr
             - TAILSCALE_SERVE_PORT=8989
         labels:
@@ -59,7 +70,8 @@ services:
         cap_add:
             - SYS_ADMIN
         volumes:
-            - 'bazarr_conf:/config:rw'
+            - bazarr_conf:/config:rw
+            - ts_bazarr:/tsconfig
         networks:
             - web_net
         environment:
@@ -67,7 +79,7 @@ services:
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=bazarr
             - TAILSCALE_SERVE_PORT=6767
         labels:
@@ -90,12 +102,13 @@ services:
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik
             - DOCKER_SOCK=/var/run/balena.sock
         volumes:
-            - "certs:/certs:rw"
-            - "traefik_conf:/config:rw"
+            - certs:/certs:rw
+            - traefik_conf:/config:rw
+            - ts_traefik:/tsconfig
         labels:
             - "io.balena.features.balena-socket=true"
 
@@ -105,10 +118,11 @@ services:
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik-tailscale
         volumes:             
-            - "traefik_tailscale_conf:/config:rw"
+            - traefik_tailscale_conf:/config:rw
+            - ts_traefik_tailscale:/tsconfig
 
     jellyfin:
         image: ghcr.io/chukysoria/jellyfin:latest
@@ -116,12 +130,14 @@ services:
             - SYS_ADMIN
         networks:
             - web_net
+        volumes:
+            - ts_jellyfin:/tsconfig
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=jellyfin
             - TAILSCALE_SERVE_PORT=8096
         labels:
@@ -141,12 +157,13 @@ services:
         networks:
             - web_net
         volumes:
-            - "prowlarr_conf:/config:rw"
+            - prowlarr_conf:/config:rw
+            - ts_prowlarr:/tsconfig
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
-            - TAILSCALE_STATE_DIR=/config
+            - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=prowlarr
             - TAILSCALE_SERVE_PORT=9696
         labels:
