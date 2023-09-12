@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-# NFS mounts
-mount -t nfs -o nolock $NFSPATH /media

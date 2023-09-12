@@ -10,18 +10,14 @@ volumes:
     duplicati:
     prowlarr_conf:
     traefik_tailscale_conf:
-    nfs_test:
-        driver: local
-        driver_opts:
-            type: nfs
-            o: "addr=192.168.1.4,nolock,soft,rw"
-            device: ":/volume1"
+
 services:
     duplicati:
-        build:
-            context: .
-            dockerfile: Dockerfile-duplicati
+        image: ghcr.io/chukysoria/duplicati:latest
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=duplicati
             - TAILSCALE_SERVE_PORT=8200
@@ -39,9 +35,7 @@ services:
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
     sonarr:
-        build:
-            context: .
-            dockerfile: Dockerfile-sonarr
+        image: ghcr.io/chukysoria/sonarr:latest
         cap_add:
             - SYS_ADMIN
         volumes:
@@ -49,6 +43,10 @@ services:
         networks:
             - web_net
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
+            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media"
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=sonarr
             - TAILSCALE_SERVE_PORT=8989
@@ -57,18 +55,18 @@ services:
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
     bazarr:
-        build:
-            context: .
-            dockerfile: Dockerfile-bazarr
+        image: ghcr.io/chukysoria/bazarr:latest
         cap_add:
             - SYS_ADMIN
         volumes:
             - 'bazarr_conf:/config:rw'
-        depends_on:
-            - sonarr
         networks:
             - web_net
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
+            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media"
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=bazarr
             - TAILSCALE_SERVE_PORT=6767
@@ -77,24 +75,21 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        # image: lscr.io/linuxserver/duckdns:arm32v7-fb872cca-ls130
         image: ghcr.io/chukysoria/duckdns:latest
 
     traefik:
-        build: 
-            context: .
-            dockerfile: Dockerfile-traefik
+        image: ghcr.io/chukysoria/traefik:latest
         ports:
             - 80:80/tcp
             - 443:443/tcp
             - 8080:8080/tcp
             - 1900:1900/udp
             - 7359:7359/udp
-        cap_add:
-            - SYS_ADMIN
         networks:
             - web_net
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik
             - DOCKER_SOCK=/var/run/balena.sock
@@ -105,28 +100,27 @@ services:
             - "io.balena.features.balena-socket=true"
 
     traefik_tailscale:
-        build: 
-            context: .
-            dockerfile: Dockerfile-traefik
+        image: ghcr.io/chukysoria/traefik:latest
         network_mode: host
-        cap_add:
-            - SYS_ADMIN
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik-tailscale
         volumes:             
             - "traefik_tailscale_conf:/config:rw"
-            - nfs_test:/media:ro
 
     jellyfin:
-        build:
-            context: .
-            dockerfile: Dockerfile-jellyfin
+        image: ghcr.io/chukysoria/jellyfin:latest
         cap_add:
             - SYS_ADMIN
         networks:
             - web_net
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
+            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config"
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=jellyfin
             - TAILSCALE_SERVE_PORT=8096
@@ -143,15 +137,15 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
 
     prowlarr:
-        # image: lscr.io/linuxserver/prowlarr:arm32v7-1.5.2.3484-ls20
-        build:
-            context: .
-            dockerfile: Dockerfile-prowlarr
+        image: ghcr.io/chukysoria/prowlarr:latest
         networks:
             - web_net
         volumes:
             - "prowlarr_conf:/config:rw"
         environment:
+            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - TAILSCALE_SERVE_MODE=https
+            - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=prowlarr
             - TAILSCALE_SERVE_PORT=9696
