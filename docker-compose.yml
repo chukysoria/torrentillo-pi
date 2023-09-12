@@ -10,7 +10,12 @@ volumes:
     duplicati:
     prowlarr_conf:
     traefik_tailscale_conf:
-
+    nfs_test:
+        driver: local
+        driver_opts:
+            type: nfs
+            o: "addr=192.168.1.4,nolock,soft,rw"
+            device: ":/volume1"
 services:
     duplicati:
         build:
@@ -105,8 +110,9 @@ services:
         environment:
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik-tailscale
-        volumes:
+        volumes:             
             - "traefik_tailscale_conf:/config:rw"
+            - nfs_test:/media:ro
 
     jellyfin:
         build:
