@@ -15,7 +15,7 @@ services:
     duplicati:
         image: ghcr.io/chukysoria/duplicati:latest
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
@@ -43,8 +43,8 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
-            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
@@ -63,8 +63,8 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
-            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
@@ -88,7 +88,7 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik
@@ -103,7 +103,7 @@ services:
         image: ghcr.io/chukysoria/traefik:latest
         network_mode: host
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
             - TAILSCALE_HOSTNAME=traefik-tailscale
@@ -117,8 +117,8 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest"
-            - MOD_NFS_MOUNTS="192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
@@ -143,7 +143,7 @@ services:
         volumes:
             - "prowlarr_conf:/config:rw"
         environment:
-            - DOCKER_MODS="ghcr.io/chukysoria/tailscale-mod:latest"
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/config
