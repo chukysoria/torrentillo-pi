@@ -10,17 +10,11 @@ assets:
 
 data:
   applicationEnvironmentVariables:
-    - DOCKER_MODS: ghcr.io/chukysoria/tailscale-mod:latest
     - DUCKDNS_TOKEN:
-    - NFSCONFIG: 192.168.1.4:/volume1/video/jellyfin
-    - NFSPATH: 192.168.1.4:/volume1
     - PGID: 100
     - PUID: 1027
     - SUBDOMAINS: boulebar.duckdns.org
     - TAILSCALE_AUTHKEY:
-    - TAILSCALE_FUNNEL: true
-    - TAILSCALE_SERVE_MODE: https
-    - TAILSCALE_USE_SSH: 1
     - TOKEN:
   defaultDeviceType: raspberry-pi2
   supportedDeviceTypes:
