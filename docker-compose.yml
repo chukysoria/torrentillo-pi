@@ -100,7 +100,7 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:armv7-v0.1.0
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik
@@ -116,7 +116,7 @@ services:
         image: ghcr.io/chukysoria/traefik:latest
         network_mode: host
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:armv7-v0.1.0
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik-tailscale
