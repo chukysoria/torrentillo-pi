@@ -22,7 +22,7 @@ volumes:
 
 services:
     duplicati:
-        image: ghcr.io/chukysoria/duplicati:latest
+        image: ghcr.io/chukysoria/duplicati:armv7-v0.1.0
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
             - TAILSCALE_SERVE_MODE=https
@@ -87,7 +87,7 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: ghcr.io/chukysoria/duckdns:latest
+        image: ghcr.io/chukysoria/duckdns:armv7-v0.1.0
 
     traefik:
         image: ghcr.io/chukysoria/traefik:latest
@@ -153,7 +153,7 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
 
     prowlarr:
-        image: ghcr.io/chukysoria/prowlarr:latest
+        image: ghcr.io/chukysoria/prowlarr:armv7-v0.1.1
         networks:
             - web_net
         volumes:
