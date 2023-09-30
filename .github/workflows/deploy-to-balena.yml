@@ -3,22 +3,22 @@ on:
     types: [opened, synchronize, closed]
     branches:
       - main
-      - master
 
 jobs:
   balena_cloud_build:
+    name: 👷 Build Balena Release
     runs-on: ubuntu-latest
     steps:
-    - name: Chekout code
-      uses: actions/checkout@v4
+    - name: ⤵️ Check out code from GitHub
+      uses: actions/checkout@v4.1.0
 
-    - name: Deploy to Balena
-      uses: balena-io/deploy-to-balena-action@master
+    - name: 🚀 Deploy to Balena
+      uses: balena-io/deploy-to-balena-action@v1.0.3
       id: build
       with:
         balena_token: ${{ secrets.BALENA_TOKEN }}
         fleet: g_carlos_s_nchez_mateo/torrentillo
 
-    - name: Log release ID built
+    - name: ℹ️ Log release ID built
       run: |
-        echo "Built release ID ${{ steps.build.outputs.release_id }}" | tee -a $GITHUB_STEP_SUMMARY
+        echo "Built release ID ${{ steps.build.outputs.release_id }}" >> $GITHUB_STEP_SUMMARY
