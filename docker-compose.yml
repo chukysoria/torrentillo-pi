@@ -22,9 +22,9 @@ volumes:
 
 services:
     duplicati:
-        image: ghcr.io/chukysoria/duplicati:latest
+        image: ghcr.io/chukysoria/duplicati:armv7-v0.1.0
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.0.0
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
@@ -45,7 +45,7 @@ services:
             - "traefik.http.routers.duplicati.rule=Host(`duplicati.boulebar.duckdns.org`)"
 
     sonarr:
-        image: ghcr.io/chukysoria/sonarr:latest
+        image: ghcr.io/chukysoria/sonarr:armv7-v0.1.0
         cap_add:
             - SYS_ADMIN
         volumes:
@@ -54,7 +54,7 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.0.0|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
@@ -66,7 +66,7 @@ services:
             - "traefik.http.routers.sonarr.rule=Host(`sonarr.boulebar.duckdns.org`)"
 
     bazarr:
-        image: ghcr.io/chukysoria/bazarr:v0.1.2
+        image: ghcr.io/chukysoria/bazarr:armv7-v0.1.2
         cap_add:
             - SYS_ADMIN
         volumes:
@@ -75,7 +75,7 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.0.0|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
@@ -87,10 +87,10 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: ghcr.io/chukysoria/duckdns:latest
+        image: ghcr.io/chukysoria/duckdns:armv7-v0.1.0
 
     traefik:
-        image: ghcr.io/chukysoria/traefik:latest
+        image: ghcr.io/chukysoria/traefik:armv7-v0.1.1
         ports:
             - 80:80/tcp
             - 443:443/tcp
@@ -100,7 +100,7 @@ services:
         networks:
             - web_net
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v0.1.0
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik
@@ -113,10 +113,10 @@ services:
             - "io.balena.features.balena-socket=true"
 
     traefik_tailscale:
-        image: ghcr.io/chukysoria/traefik:latest
+        image: ghcr.io/chukysoria/traefik:v0.1.1
         network_mode: host
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v0.1.0
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
             - TAILSCALE_HOSTNAME=traefik-tailscale
@@ -125,7 +125,7 @@ services:
             - ts_traefik_tailscale:/tsconfig
 
     jellyfin:
-        image: ghcr.io/chukysoria/jellyfin:latest
+        image: ghcr.io/chukysoria/jellyfin:armv7-v0.1.0
         cap_add:
             - SYS_ADMIN
         networks:
@@ -133,7 +133,7 @@ services:
         volumes:
             - ts_jellyfin:/tsconfig
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest|ghcr.io/chukysoria/linuxserver-mod-nfs:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.0.0|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
             - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
@@ -153,14 +153,14 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
 
     prowlarr:
-        image: ghcr.io/chukysoria/prowlarr:latest
+        image: ghcr.io/chukysoria/prowlarr:armv7-v0.1.1
         networks:
             - web_net
         volumes:
             - prowlarr_conf:/config:rw
             - ts_prowlarr:/tsconfig
         environment:
-            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:latest
+            - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.0.0
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
