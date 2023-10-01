@@ -5,5 +5,15 @@
   "labels": ["dependencies", "no-stale"],
   "commitMessagePrefix": "⬆️",
   "commitMessageTopic": "{{depName}}",
-  "assignees": ["chukysoria"]
+  "assignees": ["chukysoria"],
+  "customManagers": [
+    {
+      "fileMatch": ["(^|/)docker-compose.ya?ml$"],
+      "matchStringsStrategy": "any",
+      "matchStrings": [
+        "(DOCKER_MODS=|\\|)(?<depName>.*?):(?<currentValue>.*?)(?=[\\s\\|])"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
 }
