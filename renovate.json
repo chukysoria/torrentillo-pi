@@ -11,7 +11,7 @@
       "fileMatch": ["(^|/)docker-compose.ya?ml$"],
       "matchStringsStrategy": "any",
       "matchStrings": [
-        "(DOCKER_MODS=|\\|)(?<depName>.*?):(?<currentValue>.*?)(?=[\\s\\|])"
+        "(DOCKER_MODS=|\\|)(?<depName>.*?):(?<currentValue>[^\\|\\s]*)\\s?"
       ],
       "datasourceTemplate": "docker"
     }
