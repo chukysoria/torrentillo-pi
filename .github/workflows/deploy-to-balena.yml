@@ -6,7 +6,7 @@ on:
 
 jobs:
   balena_cloud_build:
-    name: 👷 Build Balena Release
+    name: 👷 Build Torrentillo Release
     runs-on: ubuntu-latest
     steps:
     - name: ⤵️ Check out code from GitHub
@@ -18,6 +18,23 @@ jobs:
       with:
         balena_token: ${{ secrets.BALENA_TOKEN }}
         fleet: g_carlos_s_nchez_mateo/torrentillo
+
+    - name: ℹ️ Log release ID built
+      run: |
+        echo "Built release ID ${{ steps.build.outputs.release_id }}" >> $GITHUB_STEP_SUMMARY
+  balena_cloud_build_2:
+    name: 👷 Build Transition Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⤵️ Check out code from GitHub
+      uses: actions/checkout@v4.1.1
+
+    - name: 🚀 Deploy to Balena
+      uses: balena-io/deploy-to-balena-action@v1.1.6
+      id: build
+      with:
+        balena_token: ${{ secrets.BALENA_TOKEN }}
+        fleet: g_carlos_s_nchez_mateo/transition
 
     - name: ℹ️ Log release ID built
       run: |
