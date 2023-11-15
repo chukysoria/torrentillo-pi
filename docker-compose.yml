@@ -55,7 +55,7 @@ services:
             - web_net
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.1.3|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
-            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
+            - MOD_NFS_MOUNTS=192.168.1.6:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
@@ -76,7 +76,7 @@ services:
             - web_net
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.1.3|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
-            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media
+            - MOD_NFS_MOUNTS=192.168.1.6:/volume1,/media
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
@@ -134,7 +134,7 @@ services:
             - ts_jellyfin:/tsconfig
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.1.3|ghcr.io/chukysoria/linuxserver-mod-nfs:v1.0.0
-            - MOD_NFS_MOUNTS=192.168.1.4:/volume1,/media 192.168.1.4:/volume1/video/jellyfin,/config
+            - MOD_NFS_MOUNTS=192.168.1.6:/volume1,/media 192.168.1.6:/volume1/video/jellyfin,/config
             - TAILSCALE_SERVE_MODE=https
             - TAILSCALE_USE_SSH=1
             - TAILSCALE_STATE_DIR=/tsconfig
