@@ -153,7 +153,7 @@ services:
             - "traefik.udp.services.service-jellyfin-streaming.loadbalancer.server.port=1900"
 
     prowlarr:
-        image: ghcr.io/chukysoria/prowlarr:v0.4.2
+        image: ghcr.io/chukysoria/prowlarr:v0.4.3
         networks:
             - web_net
         volumes:
