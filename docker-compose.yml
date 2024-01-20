@@ -90,7 +90,7 @@ services:
         image: ghcr.io/chukysoria/duckdns:v0.4.4
 
     traefik:
-        image: ghcr.io/chukysoria/traefik:v0.3.1
+        image: ghcr.io/chukysoria/traefik:v0.3.2
         ports:
             - 80:80/tcp
             - 443:443/tcp
@@ -113,7 +113,7 @@ services:
             - "io.balena.features.balena-socket=true"
 
     traefik_tailscale:
-        image: ghcr.io/chukysoria/traefik:v0.3.1
+        image: ghcr.io/chukysoria/traefik:v0.3.2
         network_mode: host
         environment:
             - DOCKER_MODS=ghcr.io/chukysoria/tailscale-mod:v1.1.3
