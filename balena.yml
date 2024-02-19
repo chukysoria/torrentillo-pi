@@ -19,4 +19,4 @@ data:
   defaultDeviceType: raspberry-pi2
   supportedDeviceTypes:
     - raspberry-pi2
-version: v2.1.22
+version: v2.1.23
