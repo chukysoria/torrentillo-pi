@@ -125,7 +125,7 @@ services:
             - ts_traefik_tailscale:/tsconfig
 
     jellyfin:
-        image: ghcr.io/chukysoria/jellyfin:v0.2.6
+        image: ghcr.io/chukysoria/jellyfin:v0.2.7
         cap_add:
             - SYS_ADMIN
         networks:
