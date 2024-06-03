@@ -87,7 +87,7 @@ services:
             - "traefik.http.routers.bazarr.rule=Host(`bazarr.boulebar.duckdns.org`)"
 
     duckdns:
-        image: ghcr.io/chukysoria/duckdns:v0.4.16
+        image: ghcr.io/chukysoria/duckdns:v0.5.0
 
     traefik:
         image: ghcr.io/chukysoria/traefik:v0.4.0
